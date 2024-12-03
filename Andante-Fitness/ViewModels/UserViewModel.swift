@@ -22,4 +22,9 @@ class UserViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    // Function to select a user
+    func selectUser(user: User) {
+        selectedUser = user
+    }
+    
 }
