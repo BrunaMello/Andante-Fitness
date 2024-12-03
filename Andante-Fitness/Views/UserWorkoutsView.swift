@@ -14,7 +14,6 @@ struct UserWorkoutsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("User Workouts")
                 
                 ScrollView {
                     LazyVStack(spacing:16) {
@@ -22,12 +21,9 @@ struct UserWorkoutsView: View {
                             workoutViewModel.filteredWorkoutsByUserId
                         ) { workout in
                             
-                            Text("Workout ID: \(workout.id)")
-                            Text("Workout User id: \(workout.user_id)")
-                            Text("Workout Name: \(workout.name)")
-                            Text("Workout Calories Burned: \(workout.calories_burned)")
-                            Text("Workout Difficulty: \(workout.difficulty)")
-                            Text("Workout Benefits: \(workout.benefits)")
+                            Text("Workout duration: \(workout.duration) Minutes")
+                            Text("Workout Date: \(workout.date)")
+                            Text("Workout Steps Per Minute:\(workout.stepsPerMinute)")
                       
                         }
                     }
@@ -45,5 +41,5 @@ struct UserWorkoutsView: View {
 }
 
 #Preview {
-    UserWorkoutsView(userId: 9)
+    UserWorkoutsView(userId: 2)
 }

@@ -15,6 +15,11 @@ struct Workout: Identifiable, Decodable {
     let difficulty: String
     let benefits: String
     
+    //Mock Data
+    var date: Date?
+    var stepsPerMinute: Int?
+    
+    
     
 
 }

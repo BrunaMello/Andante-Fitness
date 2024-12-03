@@ -16,10 +16,22 @@ class WorkoutViewModel: ObservableObject {
     
     func loadWorkouts() {
         WorkoutAPIService.shared.fetchWorkouts()
-            .sink(
-                receiveCompletion: { print($0)
-                },
-                receiveValue: { self.workouts = $0 })
+            .map { workouts in
+                workouts.map { workout in
+                    var updatedWorkout = workout
+                    updatedWorkout.date = DateUtilities.generateRandomDate()
+                    updatedWorkout.stepsPerMinute = Int.random(in: 1...150)
+                    return updatedWorkout
+                }
+            }
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print("Error loading workouts: \(error)")
+                }
+            }, receiveValue: { [weak self] updatedWorkouts in
+                self?.workouts = updatedWorkouts
+                print("Workouts loaded with additional data: \(updatedWorkouts)")
+            })
             .store(in: &cancellables)
     }
     
