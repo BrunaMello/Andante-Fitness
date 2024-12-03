@@ -9,6 +9,7 @@ import SwiftUI
 struct UsersLoginView: View {
     
     @StateObject private var userViewModel = UserViewModel()
+    @State private var selectedUserId: Int?
     
     
     var body: some View {
@@ -35,7 +36,7 @@ struct UsersLoginView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(userViewModel.users) { user in
                             NavigationLink(destination: {
-                                //workout view
+                                UserWorkoutsView(userId: user.id)
                             }) {
                                 HStack {
                                     Image(systemName: "person")

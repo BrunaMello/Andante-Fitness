@@ -9,6 +9,7 @@ import SwiftUI
 struct UserWorkoutsView: View {
     
     @StateObject private var workoutViewModel = WorkoutViewModel()
+    let userId: Int
     
     var body: some View {
         NavigationView {
@@ -17,7 +18,9 @@ struct UserWorkoutsView: View {
                 
                 ScrollView {
                     LazyVStack(spacing:16) {
-                        ForEach(workoutViewModel.workouts) { workout in
+                        ForEach(
+                            workoutViewModel.filteredWorkoutsByUserId
+                        ) { workout in
                             
                             Text("Workout ID: \(workout.id)")
                             Text("Workout User id: \(workout.user_id)")
@@ -32,6 +35,9 @@ struct UserWorkoutsView: View {
             }
             .onAppear {
                 workoutViewModel.loadWorkouts()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    workoutViewModel.filterWorkoutsByUserId(for: userId)
+                }
             }
         }
        
@@ -39,5 +45,5 @@ struct UserWorkoutsView: View {
 }
 
 #Preview {
-    UserWorkoutsView()
+    UserWorkoutsView(userId: 9)
 }

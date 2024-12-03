@@ -10,6 +10,7 @@ import Combine
 class WorkoutViewModel: ObservableObject {
     
     @Published var workouts: [Workout] = []
+    @Published var filteredWorkoutsByUserId: [Workout] = []
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -20,6 +21,10 @@ class WorkoutViewModel: ObservableObject {
                 },
                 receiveValue: { self.workouts = $0 })
             .store(in: &cancellables)
+    }
+    
+    func filterWorkoutsByUserId(for userId: Int) {
+        filteredWorkoutsByUserId = workouts.filter { $0.user_id == userId }
     }
     
     
