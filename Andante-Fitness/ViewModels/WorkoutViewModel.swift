@@ -21,6 +21,9 @@ class WorkoutViewModel: ObservableObject {
     @Published var workoutTypes: [String] = []
     var selectedWorkoutType: String? = nil
     
+    // Apply filter
+    @Published var minDuration: Int? = nil
+    
     func loadWorkouts() {
         WorkoutAPIService.shared.fetchWorkouts()
             .map { workouts in
@@ -49,35 +52,28 @@ class WorkoutViewModel: ObservableObject {
     
     func filterWorkoutsByUserId(for userId: Int) {
         filteredWorkoutsByUserIdBase = workouts.filter { $0.user_id == userId }
-        filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
+        applyFilters()
     }
     
     func filterWorkoutsByType(selectedType: String?) {
         selectedWorkoutType = selectedType
-        if let selectedType = selectedType, !selectedType.isEmpty {
-            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
-                .filter { $0.name == selectedType }
-        } else {
-            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
-        }
+        applyFilters()
     }
     
     func filterWorkoutsByMinDuration(minDuration: Int?) {
-        if let minDuration = minDuration {
-            filteredWorkoutsByUserId = filteredWorkoutsByUserId.filter { $0.duration >= minDuration }
-        } else {
-            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase.filter { workout in
-                if let selectedType = selectedWorkoutType, !selectedType.isEmpty {
-                    return workout.name == selectedType
-                }
-                return true
-            }
-        }
+        self.minDuration = minDuration
+        applyFilters()
     }
     
-   
-    
-    
+    func applyFilters() {
+        filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase.filter { workout in
+            let matchesType = selectedWorkoutType == nil || selectedWorkoutType == workout.name
+            
+            let matchesMinDuration = (minDuration != nil && workout.duration >= minDuration!) || minDuration == nil
+            
+            return matchesType && matchesMinDuration
+        }
+    }
     
     // Not Optionals
     func sortFilteredWorkouts<T: Comparable>(by keyPath: KeyPath<Workout, T>, ascending: Bool = true) {
