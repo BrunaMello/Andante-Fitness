@@ -39,5 +39,31 @@ class WorkoutViewModel: ObservableObject {
         filteredWorkoutsByUserId = workouts.filter { $0.user_id == userId }
     }
     
+    // Not Optionals
+    func sortFilteredWorkouts<T: Comparable>(by keyPath: KeyPath<Workout, T>, ascending: Bool = true) {
+        filteredWorkoutsByUserId = filteredWorkoutsByUserId.sorted {
+            let first = $0[keyPath: keyPath]
+            let second = $1[keyPath: keyPath]
+            
+            return ascending ? first < second : first > second
+        }
+    }
+    
+    // Optionals
+    func sortFilteredWorkouts<T: Comparable>(by keyPath: KeyPath<Workout, T?>, ascending: Bool = true) {
+        filteredWorkoutsByUserId = filteredWorkoutsByUserId.sorted {
+            let first = $0[keyPath: keyPath]
+            let second = $1[keyPath: keyPath]
+            
+            switch (first, second) {
+                case let (first?, second?):
+                    return ascending ? first < second : first > second
+                case (nil, _):
+                    return !ascending
+                case (_, nil):
+                    return ascending
+            }
+        }
+    }
     
 }
