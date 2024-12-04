@@ -23,11 +23,34 @@ struct UserWorkoutsView: View {
     // Filter by Workout Type
     @State private var selectedWorkoutType: String? = nil
     
+    // Filter by Min Duration
+    @State private var minDuration: String = ""
+    
     
     
     var body: some View {
         NavigationView {
             VStack {
+                
+                HStack {
+                    Text("Minimum Duration")
+                    
+                    Spacer()
+                    
+                    TextField("Enter minimum duration", text: $minDuration)
+                        .keyboardType(.numberPad)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
+                        .onChange(of: minDuration) { newValue in
+                            if let duration = Int(newValue), duration > 0 {
+                                workoutViewModel.filterWorkoutsByMinDuration(minDuration: duration)
+                            } else {
+                                workoutViewModel.filterWorkoutsByMinDuration(minDuration: nil)
+                            }
+                        }
+                }
+                .padding()
+                
                 
                 Picker("Select Workout Type", selection: $selectedWorkoutType) {
                     Text("All").tag(String?.none) // Opção para todos os tipos

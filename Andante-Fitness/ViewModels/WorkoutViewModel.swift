@@ -19,6 +19,7 @@ class WorkoutViewModel: ObservableObject {
     
     // Filter by workout type
     @Published var workoutTypes: [String] = []
+    var selectedWorkoutType: String? = nil
     
     func loadWorkouts() {
         WorkoutAPIService.shared.fetchWorkouts()
@@ -52,11 +53,25 @@ class WorkoutViewModel: ObservableObject {
     }
     
     func filterWorkoutsByType(selectedType: String?) {
+        selectedWorkoutType = selectedType
         if let selectedType = selectedType, !selectedType.isEmpty {
             filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
                 .filter { $0.name == selectedType }
         } else {
             filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
+        }
+    }
+    
+    func filterWorkoutsByMinDuration(minDuration: Int?) {
+        if let minDuration = minDuration {
+            filteredWorkoutsByUserId = filteredWorkoutsByUserId.filter { $0.duration >= minDuration }
+        } else {
+            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase.filter { workout in
+                if let selectedType = selectedWorkoutType, !selectedType.isEmpty {
+                    return workout.name == selectedType
+                }
+                return true
+            }
         }
     }
     
