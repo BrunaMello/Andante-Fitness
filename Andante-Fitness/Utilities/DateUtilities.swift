@@ -18,11 +18,25 @@ public class DateUtilities {
             value: Int.random(in: -30...0),
             to: today
         ) else {
-            print("Today date: \(today)")
             return today
         }
-        print(randomDate)
         return randomDate
+    }
+    
+    // Helper function to safely format optional dates
+    private func formatDate(_ date: String?) -> String {
+        guard let date = date else { return "Invalid Date" }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        if let parsedDate = formatter.date(from: date) {
+            formatter.dateFormat = "dd/MM/yyyy"
+            return formatter.string(from: parsedDate)
+        }
+        
+        return "Invalid Date"
     }
     
     
