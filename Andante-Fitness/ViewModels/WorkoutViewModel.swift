@@ -12,7 +12,13 @@ class WorkoutViewModel: ObservableObject {
     @Published var workouts: [Workout] = []
     @Published var filteredWorkoutsByUserId: [Workout] = []
     
+    // Filtered Based on User ID
+    @Published var filteredWorkoutsByUserIdBase: [Workout] = []
+    
     private var cancellables: Set<AnyCancellable> = []
+    
+    // Filter by workout type
+    @Published var workoutTypes: [String] = []
     
     func loadWorkouts() {
         WorkoutAPIService.shared.fetchWorkouts()
@@ -30,14 +36,33 @@ class WorkoutViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] updatedWorkouts in
                 self?.workouts = updatedWorkouts
+                
+                // Fill the workouts type array
+                self?.workoutTypes = Array(Set(updatedWorkouts.map { $0.name })).sorted()
                 print("Workouts loaded with additional data: \(updatedWorkouts)")
             })
             .store(in: &cancellables)
+        
+        
     }
     
     func filterWorkoutsByUserId(for userId: Int) {
-        filteredWorkoutsByUserId = workouts.filter { $0.user_id == userId }
+        filteredWorkoutsByUserIdBase = workouts.filter { $0.user_id == userId }
+        filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
     }
+    
+    func filterWorkoutsByType(selectedType: String?) {
+        if let selectedType = selectedType, !selectedType.isEmpty {
+            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
+                .filter { $0.name == selectedType }
+        } else {
+            filteredWorkoutsByUserId = filteredWorkoutsByUserIdBase
+        }
+    }
+    
+   
+    
+    
     
     // Not Optionals
     func sortFilteredWorkouts<T: Comparable>(by keyPath: KeyPath<Workout, T>, ascending: Bool = true) {
