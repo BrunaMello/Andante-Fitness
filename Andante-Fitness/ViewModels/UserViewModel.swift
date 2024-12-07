@@ -6,8 +6,12 @@
 //
 import Foundation
 import Combine
+import os
 
 class UserViewModel: ObservableObject {
+    
+    //Logger
+    private let logger = Logger(subsystem: "com.andantefitness.app", category: "UserViewModel")
     
     @Published var users: [User] = []
     @Published var selectedUser: User?
@@ -18,7 +22,19 @@ class UserViewModel: ObservableObject {
     // Function to load the users
     func loadUsers() {
         UserAPIService.shared.fetchUsers()
-            .sink(receiveCompletion: { print($0)}, receiveValue: { self.users = $0 })
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    switch completion {
+                        case .finished:
+                            self?.logger.info("Successfully loaded users.")
+                        case .failure(let error):
+                            self?.logger.error("Failed to load users: \(error.localizedDescription)")
+                    }
+                },
+                receiveValue: { [weak self] users in
+                    self?.users = users
+                }
+            )
             .store(in: &cancellables)
     }
     

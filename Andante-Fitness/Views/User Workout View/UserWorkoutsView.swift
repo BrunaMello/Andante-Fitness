@@ -9,7 +9,11 @@ import SwiftUI
 struct UserWorkoutsView: View {
     
     @StateObject private var workoutViewModel = WorkoutViewModel()
+    
     let userId: Int
+    let userName: String
+    
+    @State private var showAddWorkoutView = false
     
     @State private var sortOption: SortOption = .date
     
@@ -31,14 +35,9 @@ struct UserWorkoutsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                LinearGradient(
-                    gradient: Gradient(
-                        colors: [Color.blue.opacity(0.2), Color.white]
-                    ),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
+                
+                backgroundGradient()
+                    .ignoresSafeArea()
                 
                 VStack {
                     Text("Workouts")
@@ -109,11 +108,14 @@ struct UserWorkoutsView: View {
                     
                     Spacer()
                     
+                    FooterSectionView()
+                    
                 }
                 .onTapGesture {
                     hideKeyboard()
                 }
                 .onAppear {
+                    workoutViewModel.loadWorkoutsFromStorage()
                     workoutViewModel.loadWorkouts()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         workoutViewModel.filterWorkoutsByUserId(for: userId)
@@ -134,22 +136,18 @@ struct UserWorkoutsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(
             trailing: Button(action: {
-                //new form
+                showAddWorkoutView = true
             }) {
                 Image(systemName: "plus")
                     .font(.subheadline)
             }
         )
+        .background(
+            NavigationLink(
+                destination: AddWorkoutView(workoutViewModel: workoutViewModel,
+                    userId: userId, userName: userName),
+                isActive: $showAddWorkoutView,
+                label: { EmptyView() })
+        )
     }
-}
-
-extension View {
-    func hideKeyboard() {
-        UIApplication.shared
-            .sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
-
-#Preview {
-    UserWorkoutsView(userId: 2)
 }

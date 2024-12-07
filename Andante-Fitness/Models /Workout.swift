@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Workout: Identifiable, Decodable {
+struct Workout: Identifiable, Codable {
     let id: Int
     let user_id: Int
     let name: String
@@ -18,6 +18,7 @@ struct Workout: Identifiable, Decodable {
     //Mock Data
     var date: Date?
     var stepsPerMinute: Int?
+    
     
     
     
