@@ -72,9 +72,9 @@ This approach ensures consistent and meaningful data for development and testing
 - Translate the app into multiple languages to cater to a global audience.
 
 ### Screenshots
-![Screenshot 1](Resources/Screenshots/IMG_7997.PNG)
-![Screenshot 2](Resources/Screenshots/IMG_7998.PNG)
-![Screenshot 3](Resources/Screenshots/IMG_7999.PNG)
+<img src="Resources/Screenshots/IMG_7997.PNG" alt="Screenshot 1" width="200" height="400">
+<img src="Resources/Screenshots/IMG_7998.PNG" alt="Screenshot 1" width="200" height="400">
+<img src="Resources/Screenshots/IMG_7999.PNG" alt="Screenshot 1" width="200" height="400">
 
 
 ### Credits
