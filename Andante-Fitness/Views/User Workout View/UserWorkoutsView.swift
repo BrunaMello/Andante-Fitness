@@ -40,7 +40,7 @@ struct UserWorkoutsView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    Text("Workouts")
+                    Text("\(userName)'s Workouts")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top)
