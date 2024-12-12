@@ -24,7 +24,7 @@ The app includes features such as tracking workout details, filtering and sortin
 ### Getting Started with Development
 1. Clone the repository:
 
-`git clone https://github.com/your-repo/andante-fitness.git`
+`git clone https://github.com/BrunaMello/andante-fitness.git`
 
 
 2. Open the project in Xcode:
